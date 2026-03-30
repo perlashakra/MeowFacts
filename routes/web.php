@@ -12,6 +12,7 @@ Route::get('/', function () {
 Route::get('/setLanguage/{lang}', [LanguageController::class, 'setLanguage'])->name('setLanguage');
 
 Route::post('/facts', [FactsController::class, 'getFacts'])->name('generateFacts');
+Route::get('/facts', function(){ return  redirect('/'); });
 
 
 

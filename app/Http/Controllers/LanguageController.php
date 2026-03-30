@@ -25,7 +25,10 @@ class LanguageController extends Controller
             }
             Session::put('translatedFacts', $translatedFacts);
         }
-        return redirect('/');
+        return redirect('/')->withHeaders([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+        ]);
     }
 
 }
