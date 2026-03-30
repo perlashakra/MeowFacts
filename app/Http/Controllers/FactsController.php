@@ -49,7 +49,7 @@ class FactsController extends Controller
             }
         }
         session(['facts_en' => $originalFacts, 'facts_count' => $sliderValue]);
-        return view('index', compact('translatedFacts', 'sliderValue'));
+        return view('index', compact('translatedFacts', 'sliderValue', 'locale'));
     }
 
     protected function translate($fact){
