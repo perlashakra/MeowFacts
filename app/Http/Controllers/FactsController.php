@@ -8,11 +8,12 @@ use Illuminate\Support\Facades\Http;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
 const URL = 'https://meowfacts.herokuapp.com/';
-
-//handle network request errors with corresponding messages
 class FactsController extends Controller
 {
     public function getFacts(Request $request){
+        $locale = session()->get('locale', 'en');
+        app()->setLocale($locale);
+
         $validate = $request->validate(['sliderValue' => 'required|integer|between:1,30']);
   
         $sliderValue = (int) $request->sliderValue;
@@ -49,7 +50,7 @@ class FactsController extends Controller
             }
         }
         session(['facts_en' => $originalFacts, 'facts_count' => $sliderValue]);
-        return view('index', compact('translatedFacts', 'sliderValue', 'locale'));
+        return view('index', compact('translatedFacts', 'sliderValue'));
     }
 
     protected function translate($fact){

@@ -111,6 +111,7 @@
     <div>
         <form action="{{ route('generateFacts') }}" method="post" onsubmit="return showLoader(event)">
             @csrf
+            <input type="hidden" name="locale" value="{{ app()->getLocale() }}">
             <label for="slider">{{ __('main.select') }}</label>
             <input type="range" id="sliderInput" name="sliderValue" min=1 max=30
                 value="{{ old('sliderValue', $sliderValue ?? 1) }}"

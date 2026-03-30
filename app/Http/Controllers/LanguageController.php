@@ -25,7 +25,7 @@ class LanguageController extends Controller
             }
             Session::put('translatedFacts', $translatedFacts);
         }
-        return redirect('/')->with('locale', session()->get('locale'));
+        return redirect('/');
     }
 
 }
