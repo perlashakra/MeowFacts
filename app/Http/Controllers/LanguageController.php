@@ -16,12 +16,14 @@ class LanguageController extends Controller
 
         if(session()->has('facts_en')){
             $originalFacts = session()->get('facts_en');
-            $translatedFacts = [];
-            $tr = new GoogleTranslate();
-            $tr->setSource('en');
-            $tr->setTarget(app()->getLocale());
-            foreach($originalFacts as $fact){
-                $translatedFacts[] = app()->getLocale() === 'en' ? $fact : $tr->translate($fact);
+            if(app()->getLocale() === 'en'){
+                $translatedFacts = $originalFacts;
+            } else {
+                $tr = new GoogleTranslate();
+                $tr->setSource('en');
+                $tr->setTarget(app()->getLocale());
+                $joinedFacts = implode(' ||| ', $originalFacts);
+                $translatedFacts = explode('||| ', $tr->translate($joinedFacts));
             }
             Session::put('translatedFacts', $translatedFacts);
         }
