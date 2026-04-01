@@ -24,25 +24,17 @@ class FactsController extends Controller
             return view('index', compact('translatedFacts', 'sliderValue'));
         }
 
-        $originalFacts = [];
-          
-        for($i = 0; $i < $sliderValue; $i++){
-            try{
-                $fact = Http::get(URL);
-                if (!$fact->successful()) {
-                    return redirect()->back()->with('error', 'Unable to fetch facts at the moment. Please try again later.');
-                }
-            }catch(\Exception $e){
-                return redirect()->back()->with('error', 'Network error. Please check your connection and try again.');
+        try {
+            $jsonFacts = Http::get(URL, ['count' => $sliderValue]);
+            if (!$jsonFacts->successful()) {
+                return redirect()->back()->with('error', 'Unable to fetch facts at the moment. Please try again later.');
             }
-
-            if(isset($fact['data'][0])){
-                $originalFacts[] = $fact['data'][0];
-            }
-            else{
-                return redirect()->back()->with('error', 'Unexpected response from the server. Please try again later.');
-            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Network error. Please check your connection and try again.');
         }
+
+        $originalFacts = $jsonFacts->json()['data'];
+
         session(['facts_en' => $originalFacts, 'facts_count' => $sliderValue]);
         $translatedFacts = $this->translate($originalFacts);
         return view('index', compact('translatedFacts', 'sliderValue'));
@@ -54,8 +46,9 @@ class FactsController extends Controller
         $tr->setSource('en');
         $tr->setTarget(app()->getLocale());
 
-        $joinedFacts = implode(' ||| ', $facts);
+        $separator = '<<<SEP>>>';
+        $joinedFacts = implode($separator, $facts);
         $result = $tr->translate($joinedFacts);
-        return explode(' ||| ', $result);
+        return explode($separator, $result);
     }
 }

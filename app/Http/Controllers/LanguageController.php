@@ -14,6 +14,7 @@ class LanguageController extends Controller
             Session::put('locale', $lang);
         }
 
+
         if(session()->has('facts_en')){
             $originalFacts = session()->get('facts_en');
             if(app()->getLocale() === 'en'){
